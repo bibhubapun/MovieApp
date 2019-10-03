@@ -1,6 +1,8 @@
 package com.stackroute.MovieApp.controller;
 
 import com.stackroute.MovieApp.domain.Movie;
+import com.stackroute.MovieApp.exception.MovieAlreadyExistsException;
+import com.stackroute.MovieApp.exception.MovieNotFoundException;
 import com.stackroute.MovieApp.service.MovieService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,7 @@ public class MovieController {
         try{
             movieService.saveMovie(movie);
             responseEntity=new ResponseEntity<String>("Successfully created", HttpStatus.CREATED);
-        }catch (Exception e){
+        }catch (MovieAlreadyExistsException e){
             responseEntity=new ResponseEntity<String>(e.getMessage(),HttpStatus.CONFLICT);
         }
         return responseEntity;
@@ -31,7 +33,14 @@ public class MovieController {
 
     @GetMapping("movie")
     public ResponseEntity<?> getAllMovies(){
-        return new ResponseEntity<List<Movie>>(movieService.getAllMovies(),HttpStatus.OK);
+        ResponseEntity responseEntity;
+        try {
+           responseEntity=new ResponseEntity<List<Movie>>( movieService.getAllMovies(),HttpStatus.OK);
+        }catch (MovieNotFoundException e){
+            responseEntity=new ResponseEntity<String>(e.getMessage(),HttpStatus.CONFLICT);
+
+        }
+        return responseEntity;
     }
 
     @GetMapping("movie/{movieName}")
@@ -42,14 +51,25 @@ public class MovieController {
     @DeleteMapping("movie/{id}")
     public ResponseEntity<?> deleteMovie(@PathVariable("id") int id)
     {
-        return new ResponseEntity<Boolean>(movieService.deleteMovie(id),HttpStatus.OK);
+        ResponseEntity responseEntity;
+        try {
+            responseEntity = new ResponseEntity<Boolean>(movieService.deleteMovie(id), HttpStatus.OK);
+        }catch (MovieNotFoundException e){
+            responseEntity=new ResponseEntity(e.getMessage(),HttpStatus.CONFLICT);
+        }
+        return responseEntity;
     }
 
 
     @RequestMapping(method = RequestMethod.PATCH,value = "movie")
     public ResponseEntity<?> updateMovie(@RequestBody Movie movie)
-    {
-        return new ResponseEntity<Movie>(movieService.updateMovie(movie),HttpStatus.OK);
+    { ResponseEntity responseEntity;
+       try{
+           responseEntity=new ResponseEntity<Movie>(movieService.updateMovie(movie),HttpStatus.OK);
+       }catch (MovieNotFoundException e){
+           responseEntity=new ResponseEntity(e.getMessage(),HttpStatus.CONFLICT);
+       }
+        return responseEntity;
     }
 
 }
