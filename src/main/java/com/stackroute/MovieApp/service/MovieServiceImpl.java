@@ -41,4 +41,9 @@ public class MovieServiceImpl implements MovieService {
         updatedMovie.setReleaseYear(movie.getReleaseYear());
         return movieRepository.save(updatedMovie);
     }
+
+    @Override
+    public List<Movie> getMovieByName(String name) {
+      return movieRepository.getMovieByName(name);
+    }
 }

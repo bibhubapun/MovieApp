@@ -17,7 +17,7 @@ public class MovieController {
         this.movieService = movieService;
     }
 
-    @PostMapping("user")
+    @PostMapping("movie")
     public ResponseEntity<?> saveMovie(@RequestBody Movie movie) {
         ResponseEntity responseEntity;
         try{
@@ -29,21 +29,27 @@ public class MovieController {
         return responseEntity;
     }
 
-    @GetMapping("user")
+    @GetMapping("movie")
     public ResponseEntity<?> getAllMovies(){
         return new ResponseEntity<List<Movie>>(movieService.getAllMovies(),HttpStatus.OK);
     }
 
-    @DeleteMapping("user/{id}")
+    @GetMapping("movie/{movieName}")
+    public ResponseEntity<?> getMovieByName(@PathVariable ("movieName") String name){
+        return  new ResponseEntity<List<Movie>>(movieService.getMovieByName(name), HttpStatus.OK);
+    }
+
+    @DeleteMapping("movie/{id}")
     public ResponseEntity<?> deleteMovie(@PathVariable("id") int id)
     {
         return new ResponseEntity<Boolean>(movieService.deleteMovie(id),HttpStatus.OK);
     }
 
 
-    @RequestMapping(method = RequestMethod.PATCH,value = "user")
+    @RequestMapping(method = RequestMethod.PATCH,value = "movie")
     public ResponseEntity<?> updateMovie(@RequestBody Movie movie)
     {
         return new ResponseEntity<Movie>(movieService.updateMovie(movie),HttpStatus.OK);
     }
+
 }
