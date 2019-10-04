@@ -5,17 +5,21 @@ import com.stackroute.MovieApp.exception.MovieAlreadyExistsException;
 import com.stackroute.MovieApp.exception.MovieNotFoundException;
 import com.stackroute.MovieApp.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
 @ConfigurationProperties("application.properties")
+@Primary
+@Qualifier
 public class MovieServiceImpl implements MovieService, ApplicationListener<ApplicationReadyEvent>, CommandLineRunner {
 
     @Autowired
