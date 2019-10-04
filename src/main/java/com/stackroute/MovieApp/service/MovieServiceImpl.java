@@ -5,11 +5,31 @@ import com.stackroute.MovieApp.exception.MovieAlreadyExistsException;
 import com.stackroute.MovieApp.exception.MovieNotFoundException;
 import com.stackroute.MovieApp.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.ApplicationListener;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
-public class MovieServiceImpl implements MovieService {
+@ConfigurationProperties("application.properties")
+public class MovieServiceImpl implements MovieService, ApplicationListener<ApplicationReadyEvent>, CommandLineRunner {
+
+    @Autowired
+    Environment environment;
+    @Value("${id:default}")
+    int id;
+    @Value("${movieName:default}")
+    String movieName;
+    @Value("${plot:default}")
+    String plot;
+    @Value("${releaseYear:default}")
+    int releaseYear;
+
+
 
      private MovieRepository movieRepository;
 
@@ -38,11 +58,13 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public boolean deleteMovie(int id) throws MovieNotFoundException{
-        if(movieRepository.existsById(id)){
+        if(!movieRepository.existsById(id)){
             throw new MovieNotFoundException("Movie to be deleted not found");
         }
+        else{
         movieRepository.deleteById(id);
         return true;
+        }
     }
 
     @Override
@@ -60,5 +82,16 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public List<Movie> getMovieByName(String name) {
       return movieRepository.getMovieByName(name);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+        Movie movie= new Movie(1,environment.getProperty("movieName"),plot,releaseYear);
+        movieRepository.save(movie);
     }
 }

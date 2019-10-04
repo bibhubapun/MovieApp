@@ -1,6 +1,5 @@
 package com.stackroute.MovieApp;
 
-import com.stackroute.MovieApp.startup.MovieAppStartup;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.event.ContextRefreshedEvent;
