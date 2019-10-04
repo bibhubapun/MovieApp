@@ -45,14 +45,14 @@ public class MovieServiceImpl implements MovieService, ApplicationListener<Appli
         this.movieRepository = movieRepository;
     }
 
-    @Profile("test1")
+    @Profile("dev")
     @Bean
     public boolean saveTest1(){
         movieRepository.save(new Movie(id,movieName,plot,releaseYear));
         return true;
     }
 
-    @Profile("test2")
+    @Profile("prod")
     @Bean
     public boolean saveTest2(){
         movieRepository.save(new Movie(id,movieName,plot,releaseYear));
