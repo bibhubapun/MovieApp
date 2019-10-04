@@ -11,7 +11,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -35,11 +37,26 @@ public class MovieServiceImpl implements MovieService, ApplicationListener<Appli
 
 
 
+
      private MovieRepository movieRepository;
 
     @Autowired
     public MovieServiceImpl(MovieRepository movieRepository) {
         this.movieRepository = movieRepository;
+    }
+
+    @Profile("test1")
+    @Bean
+    public boolean saveTest1(){
+        movieRepository.save(new Movie(id,movieName,plot,releaseYear));
+        return true;
+    }
+
+    @Profile("test2")
+    @Bean
+    public boolean saveTest2(){
+        movieRepository.save(new Movie(id,movieName,plot,releaseYear));
+        return true;
     }
 
     @Override
